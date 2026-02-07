@@ -130,7 +130,7 @@ if($basari_yuzdesi >= 90) {
     
     /* Navbar ve genel düzen style.css'den geliyor */
     body { background: linear-gradient(135deg, #f5f7fa, #c3e0ff, #e0c3fc); min-height: 100vh; }
-    h1 { font-size: 2.8rem; color: #023e8a; font-weight: 700; text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); text-align: center; margin-top: 30px; margin-bottom: 40px; }
+    h1 { font-size: 2.8rem; color: #023e8a; font-weight: 700; text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); text-align: center; margin-top: -40px; margin-bottom: 40px; }
     .container { padding-top: 40px; }
   </style>
 </head>
@@ -143,6 +143,7 @@ if($basari_yuzdesi >= 90) {
         <li class="nav-item"><a class="nav-link" href="analiz.php">Diş Analizi</a></li>
         <li class="nav-item"><a class="nav-link active" href="fircalama.php">Fırçalama Takibi</a></li>
         <li class="nav-item"><a class="nav-link" href="bahcem.php">Diş Haritam</a></li>
+        <li class="nav-item"><a class="nav-link" href="ayarlar.php"><i class="fas fa-cog"></i></a></li>
       </ul>
     </div>
   </nav>

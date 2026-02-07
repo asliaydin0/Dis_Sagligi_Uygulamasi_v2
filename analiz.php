@@ -177,6 +177,9 @@
         <li class="nav-item">
           <a class="nav-link" href="bahcem.php">Diş Haritam</a>
         </li>
+        <li class="nav-item">
+          <a class="nav-link" href="ayarlar.php"><i class="fas fa-cog"></i></a>
+        </li>
       </ul>
     </div>
   </nav>

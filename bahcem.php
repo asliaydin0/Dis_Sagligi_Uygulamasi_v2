@@ -249,6 +249,7 @@ function isBadTooth($i) {
                 <li class="nav-item"><a class="nav-link" href="analiz.php">Diş Analizi</a></li>
                 <li class="nav-item"><a class="nav-link" href="fircalama.php">Fırçalama Takibi</a></li>
                 <li class="nav-item"><a class="nav-link active" href="bahcem.php">Diş Haritam</a></li>
+                <li class="nav-item"><a class="nav-link" href="ayarlar.php"><i class="fas fa-cog"></i></a></li>
             </ul>
         </div>
     </nav>
