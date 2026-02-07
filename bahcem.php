@@ -36,7 +36,7 @@ function isBadTooth($i) {
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <title>Diş Bahçem</title>
+    <title>Diş Haritam</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
     <style>
@@ -248,13 +248,13 @@ function isBadTooth($i) {
                 <li class="nav-item"><a class="nav-link" href="anasayfa.php">Anasayfa</a></li>
                 <li class="nav-item"><a class="nav-link" href="analiz.php">Diş Analizi</a></li>
                 <li class="nav-item"><a class="nav-link" href="fircalama.php">Fırçalama Takibi</a></li>
-                <li class="nav-item"><a class="nav-link active" href="bahcem.php">Diş Bahçem</a></li>
+                <li class="nav-item"><a class="nav-link active" href="bahcem.php">Diş Haritam</a></li>
             </ul>
         </div>
     </nav>
 
     <div class="container">
-        <h1>Diş Bahçem</h1>
+        <h1>Diş Haritam</h1>
         <div class="username">👋 Hoş geldin, <strong><?php echo htmlspecialchars($username); ?></strong></div>
 
         <div class="tooth-map">

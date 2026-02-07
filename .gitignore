@@ -1,0 +1,7 @@
+# Gizli Dosyalar (Kesinlikle gitmemeli)
+.env
+baglanti.php
+
+# Gereksiz Klasörler
+/vendor
+.vscode

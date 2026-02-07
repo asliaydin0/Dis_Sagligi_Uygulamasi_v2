@@ -6,110 +6,18 @@
   <title>Hızlı Diş Analizi</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+  <link rel="stylesheet" href="style.css" />
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Segoe UI', sans-serif;
-    }
-
-    body {
-      background: linear-gradient(to right, #eef2f3, #8ec5fc);
-      min-height: 100vh;
-      color: #1e293b;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .navbar {
-      background: linear-gradient(45deg, #ff6b6b, #a855f7, #06b6d4);
-      padding: 10px 30px;
-      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
-      border-bottom: 3px solid rgba(255, 255, 255, 0.2);
-      position: relative;
-      overflow: hidden;
-      transition: all 0.3s ease;
-    }
-
-    .navbar::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-      transition: 0.5s;
-    }
-
-    .navbar:hover::before {
-      left: 100%;
-    }
-
-    .navbar a {
-      color: #fff;
-      font-weight: 500;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      padding: 10px 15px;
-      border-radius: 5px;
-      transition: all 0.3s ease;
-    }
-
-    .navbar a:hover {
-      background: rgba(255, 255, 255, 0.2);
-      transform: translateY(-2px);
-    }
-
-    .navbar-brand {
-      font-weight: 700;
-      font-size: 1.5rem;
-      color: white;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .nav-tabs .nav-link {
-      color: white;
-      font-weight: 500;
-      transition: all 0.3s ease;
-      border: none;
-      padding: 10px 20px;
-    }
-
-    .nav-tabs .nav-link.active {
-      background: rgba(255, 255, 255, 0.9);
-      color: #4f46e5;
-      border-radius: 8px 8px 0 0;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    }
-
-    .nav-tabs .nav-link:hover {
-      color: #e0f2fe;
-      background: rgba(255, 255, 255, 0.2);
-    }
-
     .container {
       flex: 1;
       max-width: 900px;
-      margin: 40px auto;
+      margin: 5px auto;
       background: white;
       padding: 40px;
       border-radius: 20px;
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-      
       border-top: 6px solid #06b6d4;
       
-  
-    }
-
-    h2 {
-      font-size: 26px;
-      text-align: center;
-      color: #4f46e5;
-      margin-bottom: 20px;
     }
 
     textarea {
@@ -180,95 +88,20 @@
       background: #15803d;
     }
 
-    footer {
-      background: linear-gradient(to bottom, transparent, #023d8aa6 70%); /* Yumuşak geçiş için gradyan */
-      padding: 150px 20px 40px 20px; 
-      margin-top: 20px; /* Footer'ı sayfanın içeriğinden daha aşağı kaydırır */
-      color: white; 
-      font-size: 0.9rem;
-      font-weight: 500;
-    
-    }
-    
-    .footer-content {
-      display: flex;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 20px;
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-    
-    .footer-section {
-      flex: 1;
-      min-width: 200px;
-    }
-    
-    .footer-section h3 {
-      font-size: 1.2rem;
-      margin-bottom: 15px;
-      font-weight: 600;
-      text-transform: uppercase;
-    }
-    
-    .footer-section p,
-    .footer-section a {
-      color: white;
-      font-size: 0.9rem;
-      line-height: 1.6;
-      text-decoration: none;
-      transition: color 0.3s ease;
-    }
-    
-    .footer-section a:hover {
-      color: #a855f7;
-    }
-    
-    .social-icons {
-      display: flex;
-      gap: 15px;
-    }
-    
-    .social-icons a {
-      font-size: 1.5rem;
-      color: white;
-      transition: transform 0.3s ease, color 0.3s ease;
-    }
-    
-    .social-icons a:hover {
-      color: #262323ff;
-      transform: translateY(-3px);
-    }
-    
-    .footer-bottom {
-      text-align: center;
-      margin-top: 20px;
-      padding-top: 20px;
-      border-top: 1px solid rgba(255, 255, 255, 0.2);
-    }
-    
-    @media (max-width: 768px) {
-    .footer-content {
-        flex-direction: column;
-        text-align: center;
-      }
-    .social-icons {
-        justify-content: center;
-      }
-    }
     .tooth {
-    min-width: 60px;
-    text-align: center;
-    border-radius: 8px;
-    transition: 0.3s;
+      min-width: 60px;
+      text-align: center;
+      border-radius: 8px;
+      transition: 0.3s;
     }
 
     .tooth.active {
-    background-color: #4f46e5 !important;
-    color: white !important;
-    border-color: #4f46e5 !important;
-  }
-      .tooth-image {
+      background-color: #4f46e5 !important;
+      color: white !important;
+      border-color: #4f46e5 !important;
+    }
+
+    .tooth-image {
       width: 100%;
       max-height: 350px;
       object-fit: contain;
@@ -301,9 +134,10 @@
       margin-top: 20px;
       border-radius: 8px;
     }
-      .mhrs-btn {
-      display: block; /* Block yaparak tam genişlik alır */
-      margin-left: auto; /* Sağdan ve soldan otomatik margin ile ortalar */
+
+    .mhrs-btn {
+      display: block;
+      margin-left: auto;
       margin-right: auto;
       margin-top: 20px;
       background: #16a34a;
@@ -315,15 +149,15 @@
       border-radius: 8px;
       text-decoration: none;
       transition: all 0.3s ease;
-      width: fit-content; /* Butonun içeriğe göre genişlik almasını sağlar */
-  }
+      width: fit-content;
+    }
 
-  .mhrs-btn:hover {
-    background: #107133ff;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 10px rgba(79, 70, 229, 0.3);
-  }
-
+    .mhrs-btn:hover {
+      background: #107133ff;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 10px rgba(79, 70, 229, 0.3);
+    }
+    
   </style>
 </head>
 <body>
@@ -341,70 +175,98 @@
           <a class="nav-link" href="fircalama.php">Fırçalama Takibi</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="bahcem.php">Diş Bahçem</a>
+          <a class="nav-link" href="bahcem.php">Diş Haritam</a>
         </li>
       </ul>
     </div>
   </nav>
+  <h1>Hızlı Diş Analizi</h1>
+  <div class="container">
+<img src="img/dis-numarali.png" alt="Numaralandırılmış Diş Görseli" class="tooth-image">
 
-<div class="container">
-  <h2>Hızlı Diş Analizi</h2>
+    <form method="POST">
+      <div class="mb-3">
+        <label for="toothNumber" class="form-label">Lütfen şikayetçi olduğunuz diş numarasını seçin:</label>
+        <select class="form-select" name="toothNumber" id="toothNumber" required>
+          <option value="" disabled selected>Seçiniz</option>
+          <?php
+          // Sağ Üst (Quadrant 1: 11-18)
+          echo '<optgroup label="Sağ Üst Çeyrek">';
+          for ($i = 1; $i <= 8; $i++) {
+              $toothNumber = 10 + $i; // 11-18
+              echo "<option value='$toothNumber'>Sağ Üst $i ($toothNumber)</option>";
+          }
+          echo '</optgroup>';
 
-  <img src="img/dis-numarali.png" alt="Numaralandırılmış Diş Görseli" class="tooth-image">
+          // Sağ Alt (Quadrant 4: 41-48)
+          echo '<optgroup label="Sağ Alt Çeyrek">';
+          for ($i = 1; $i <= 8; $i++) {
+              $toothNumber = 40 + $i; // 41-48
+              echo "<option value='$toothNumber'>Sağ Alt $i ($toothNumber)</option>";
+          }
+          echo '</optgroup>';
 
-  <form method="POST">
-    <div class="mb-3">
-      <label for="toothNumber" class="form-label">Lütfen şikayetçi olduğunuz diş numarasını seçin:</label>
-      <select class="form-select" name="toothNumber" id="toothNumber" required>
-        <option value="" disabled selected>Seçiniz</option>
-        <?php
-        for ($i = 1; $i <= 32; $i++) {
-            echo "<option value='$i'>$i</option>";
-        }
-        ?>
-      </select>
-    </div>
+          // Sol Üst (Quadrant 2: 21-28)
+          echo '<optgroup label="Sol Üst Çeyrek">';
+          for ($i = 1; $i <= 8; $i++) {
+              $toothNumber = 20 + $i; // 21-28
+              echo "<option value='$toothNumber'>Sol Üst $i ($toothNumber)</option>";
+          }
+          echo '</optgroup>';
 
-    <div class="mb-3">
-      <label for="complaint" class="form-label">Şikayetinizi kısaca yazın:</label>
-      <textarea class="form-control" name="complaint" id="complaint" rows="4" placeholder="Örneğin: Ağrı, hassasiyet, şişlik..." required></textarea>
-    </div>
+          // Sol Alt (Quadrant 3: 31-38)
+          echo '<optgroup label="Sol Alt Çeyrek">';
+          for ($i = 1; $i <= 8; $i++) {
+              $toothNumber = 30 + $i; // 31-38
+              echo "<option value='$toothNumber'>Sol Alt $i ($toothNumber)</option>";
+          }
+          echo '</optgroup>';
+          ?>
+        </select>
+      </div>
 
-    <div class="mb-3">
-      <label for="painLevel" class="form-label">Şikayet Seviyesi:</label>
-      <select class="form-select" name="painLevel" id="painLevel" required>
-        <option value="" disabled selected>Seçiniz</option>
-        <option value="Hafif">Hafif</option>
-        <option value="Orta">Orta</option>
-        <option value="Şiddetli">Şiddetli</option>
-      </select>
-    </div>
+      <div class="mb-3">
+        <label for="complaint" class="form-label">
 
-    <button type="submit" class="btn btn-primary">Analizi Göster</button>
-    <a href="https://www.mhrs.gov.tr" target="_blank" class="mhrs-btn btn-sm">MHRS'den Randevu Al</a>
+Şikayetinizi kısaca yazın:</label>
+        <textarea class="form-control" name="complaint" id="complaint" rows="4" placeholder="Örneğin: Ağrı, hassasiyet, şişlik..." required></textarea>
+      </div>
+
+      <div class="mb-3">
+        <label for="painLevel" class="form-label">Şikayet Seviyesi:</label>
+        <select class="form-select" name="painLevel" id="painLevel" required>
+          <option value="" disabled selected>Seçiniz</option>
+          <option value="Hafif">Hafif</option>
+          <option value="Orta">Orta</option>
+          <option value="Şiddetli">Şiddetli</option>
+        </select>
+      </div>
+
+      <button type="submit" class="btn btn-primary">Analizi Göster</button>
+      
+    </form>
+
+    <?php
+    require_once 'gemini_api.php';
+
+    if ($_SERVER["REQUEST_METHOD"] === "POST") {
+        $tooth = htmlspecialchars($_POST['toothNumber']);
+        $complaint = htmlspecialchars($_POST['complaint']);
+        $pain = htmlspecialchars($_POST['painLevel']);
+
+        $aiResponse = analyzeToothWithGemini($tooth, $complaint, $pain);
+
+        echo "<div class='ai-suggestion'>";
+        echo "<strong>Yapay Zeka Önerisi:</strong><br>";
+        echo "📍 Diş: <strong>$tooth</strong><br>";
+        echo "📄 Şikayet: <em>$complaint</em><br>";
+        echo "🔺 Ağrı Şiddeti: <strong>$pain</strong><br><br>";
+        echo "🤖 $aiResponse";
+        echo "</div>";
+    }
     
-  </form>
-  <?php
-
-require_once 'gemini_api.php';
-
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $tooth = htmlspecialchars($_POST['toothNumber']);
-    $complaint = htmlspecialchars($_POST['complaint']);
-    $pain = htmlspecialchars($_POST['painLevel']);
-
-    $aiResponse = analyzeToothWithGemini($tooth, $complaint, $pain);
-
-    echo "<div class='ai-suggestion'>";
-    echo "<strong>Yapay Zeka Önerisi:</strong><br>";
-    echo "📍 Diş: <strong>$tooth</strong><br>";
-    echo "📄 Şikayet: <em>$complaint</em><br>";
-    echo "🔺 Ağrı Şiddeti: <strong>$pain</strong><br><br>";
-    echo "🤖 $aiResponse";
-    echo "</div>";
-}
-  ?>
-</div>
+    ?>
+  </div>
   <footer>
     <div class="footer-content">
       <div class="footer-section">
