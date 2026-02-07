@@ -68,12 +68,15 @@ if($basari_yuzdesi >= 90) {
   <title>Fırçalama Takibi | Diş Sağlığı Asistanı</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+  <link rel="stylesheet" href="style.css" />
+  
   <style>
     * { box-sizing: border-box; }
     html { scroll-behavior: smooth; }
     body {
       margin: 0;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      /* Arka plan stilini style.css'den çekmesini istiyorsan burayı da silebilirsin, ama özel kalmasını istiyorsan kalsın */
       background: linear-gradient(135deg, #f5f7fa, #c3e0ff, #e0c3fc);
       background-size: 200% 200%;
       animation: backgroundGradient 15s ease infinite;
@@ -115,12 +118,7 @@ if($basari_yuzdesi >= 90) {
     .ai-dashboard-card { border-radius: 15px; padding: 25px; border: 1px dashed rgba(0,0,0,0.1); position: relative; overflow: hidden; }
     .ai-badge { position: absolute; top: 15px; right: 15px; font-size: 0.8rem; background: white; padding: 5px 12px; border-radius: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); font-weight: 600; color: #666; }
     
-    footer { background: linear-gradient(to bottom, transparent, #023d8aa6 70%); padding: 150px 20px 40px 20px; color: white; font-size: 0.9rem; }
-    .footer-content { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 20px; max-width: 1200px; margin: 0 auto; }
-    .footer-section h3 { font-size: 1.2rem; margin-bottom: 15px; }
-    .footer-section a, .footer-section p { color: white; font-size: 0.9rem; text-decoration: none; }
-    .footer-bottom { text-align: center; padding-top: 20px; }
-    .social-icons a { color: white; margin-right: 15px; font-size: 1.2rem; }
+    /* FOOTER STİLLERİ SİLİNDİ - STYLE.CSS'DEN ÇEKİLECEK */
   </style>
 </head>
 <body>
@@ -188,37 +186,29 @@ if($basari_yuzdesi >= 90) {
               </div>
               <div class="col">
                   <h4 class="mb-1 fw-bold"><?= $ai_title ?></h4>
-                  <div class="row g-3 mt-3">
+                  
+                  <div class="row g-3 mt-4">
                       <div class="col-6 col-md-4">
                           <div class="p-3 text-center rounded-4 shadow-sm border" style="background: rgba(255, 193, 7, 0.1); border-color: rgba(255, 193, 7, 0.2) !important;">
                               <div class="small fw-bold text-uppercase text-muted opacity-75 mb-1">Güneş (Sabah)</div>
-                              <div class="h4 fw-bold mb-0 text-dark">
-                                  <i class="fas fa-sun text-warning me-2"></i><?= $sabah_toplam ?> / 7
-                              </div>
+                              <div class="h4 fw-bold mb-0 text-dark"><i class="fas fa-sun text-warning me-2"></i><?= $sabah_toplam ?> / 7</div>
                           </div>
                       </div>
-
                       <div class="col-6 col-md-4">
                           <div class="p-3 text-center rounded-4 shadow-sm border" style="background: rgba(13, 110, 253, 0.1); border-color: rgba(13, 110, 253, 0.2) !important;">
                               <div class="small fw-bold text-uppercase text-muted opacity-75 mb-1">Ay (Akşam)</div>
-                              <div class="h4 fw-bold mb-0 text-dark">
-                                  <i class="fas fa-moon text-primary me-2"></i><?= $aksam_toplam ?> / 7
-                              </div>
+                              <div class="h4 fw-bold mb-0 text-dark"><i class="fas fa-moon text-primary me-2"></i><?= $aksam_toplam ?> / 7</div>
                           </div>
                       </div>
-
                       <div class="col-12 col-md-4">
                           <div class="p-3 text-center rounded-4 shadow-sm border" style="background: rgba(220, 53, 69, 0.1); border-color: rgba(220, 53, 69, 0.2) !important;">
                               <div class="small fw-bold text-uppercase text-muted opacity-75 mb-1">Ateş (Seri)</div>
-                              <div class="h4 fw-bold mb-0 text-dark">
-                                  <i class="fas fa-fire text-danger me-2"></i><?= $seri_sorgu ?> Gün
-                              </div>
+                              <div class="h4 fw-bold mb-0 text-dark"><i class="fas fa-fire text-danger me-2"></i><?= $seri_sorgu ?> Gün</div>
                           </div>
                       </div>
                   </div>
 
-
-                  <div class="p-3 bg-white rounded-3 border-start border-4 border-info shadow-sm mt-4">
+                  <div class="p-3 bg-white rounded-3 border-start border-4 border-info shadow-sm mt-5">
                       <p class="mb-0 text-dark fw-medium" style="font-size: 1.1rem;">"<?= $ai_text ?>"</p>
                   </div>
               </div>
@@ -245,19 +235,6 @@ if($basari_yuzdesi >= 90) {
     </div>
   </div>
 
-  <footer>
-    <div class="footer-content">
-      <div class="footer-section">
-        <h3>Bize Ulaşın</h3>
-        <p><i class="fas fa-envelope"></i> asliaydn12204@gmail.com</p>
-        <p><i class="fas fa-phone"></i> +90 555 123 45 67</p>
-        <p><i class="fas fa-map-marker-alt"></i> Tokat/Türkiye</p>
-      </div>
-      <div class="footer-section text-center"><div class="social-icons"><a href="#"><i class="fab fa-twitter"></i></a><a href="#"><i class="fab fa-instagram"></i></a><a href="#"><i class="fab fa-linkedin-in"></i></a></div></div>
-      <div class="footer-section text-end"><p>© 2025 Aslı AYDIN tarafından geliştirildi.</p></div>
-    </div>
-  </footer>
-
   <script>
     function islemYap(vakit, tip) {
         if (tip === 'sil' && !confirm("Bu kaydı silmek istediğinize emin misiniz?")) return;
@@ -274,5 +251,31 @@ if($basari_yuzdesi >= 90) {
         if ("Notification" in window) Notification.requestPermission();
     }
   </script>
+
+  <footer>
+    <div class="footer-content">
+      <div class="footer-section">
+        <h3>Bize Ulaşın</h3>
+        <p><i class="fas fa-envelope"></i> asliaydn12204@gmail.com</p>
+        <p><i class="fas fa-phone"></i> +90 555 123 45 67</p>
+        <p><i class="fas fa-map-marker-alt"></i> Aydın Diş Sağlığı Merkezi, Tokat/Türkiye</p>
+      </div>
+      <div class="footer-section">
+        <h3>Bizi Takip Edin</h3>
+        <div class="social-icons">
+          <a href="https://twitter.com/aslaydn0" target="_blank"><i class="fab fa-twitter"></i></a>
+          <a href="https://instagram.com/asliaydn_w" target="_blank"><i class="fab fa-instagram"></i></a>
+          <a href="https://www.linkedin.com/in/asliaydin0" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+        </div>
+      </div>
+      <div class="footer-section">
+        <h3>Hakkımızda</h3>
+        <p>Diş Sağlığı platformu, yapay zeka destekli çözümlerle diş sağlığınızı korumanıza yardımcı olur.</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      © 2025 Aslı AYDIN tarafından geliştirildi.
+    </div>
+  </footer>
 </body>
 </html>
