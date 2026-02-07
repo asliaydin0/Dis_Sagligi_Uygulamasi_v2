@@ -13,6 +13,18 @@ $user_id = $_SESSION['user_id'];
 $bugun = date('Y-m-d');
 $suan_saat = (int)date('H');
 
+// Kullanıcının kayıtlı saatlerini çekelim
+$user_query = $conn->query("SELECT hatirlatma_sabah, hatirlatma_aksam FROM users WHERE id = $user_id");
+$user_data = $user_query->fetch_assoc();
+
+// Eğer veritabanında saat yoksa varsayılan değerleri ata
+$kayitli_sabah = $user_data['hatirlatma_sabah'] ?? '08:00';
+$kayitli_aksam = $user_data['hatirlatma_aksam'] ?? '22:30';
+// Saniye kısmını temizle (08:00:00 -> 08:00)
+$kayitli_sabah = date('H:i', strtotime($kayitli_sabah));
+$kayitli_aksam = date('H:i', strtotime($kayitli_aksam));
+
+
 // Bugünün kayıtlarını kontrol et
 $sabah_check = $conn->query("SELECT id FROM fircalama_takip WHERE user_id=$user_id AND tarih='$bugun' AND vakit='sabah'");
 $aksam_check = $conn->query("SELECT id FROM fircalama_takip WHERE user_id=$user_id AND tarih='$bugun' AND vakit='aksam'");
@@ -20,13 +32,13 @@ $aksam_check = $conn->query("SELECT id FROM fircalama_takip WHERE user_id=$user_
 $sabah_fircalandi = ($sabah_check->num_rows > 0);
 $aksam_fircalandi = ($aksam_check->num_rows > 0);
 
-// Haftalık Başarı Hesaplama (Son 7 gün)
+// Haftalık Başarı Hesaplama
 $yedi_gun_once = date('Y-m-d', strtotime('-7 days'));
 $toplam_kayit_sorgu = $conn->query("SELECT COUNT(*) as toplam FROM fircalama_takip WHERE user_id=$user_id AND tarih >= '$yedi_gun_once'");
 $toplam_kayit = $toplam_kayit_sorgu->fetch_assoc()['toplam'];
 $basari_yuzdesi = round(($toplam_kayit / 14) * 100);
 
-// ZENGİNLEŞTİRİLMİŞ ANALİZ VERİLERİ
+// İstatistikler
 $sabah_toplam = $conn->query("SELECT COUNT(*) as t FROM fircalama_takip WHERE user_id=$user_id AND vakit='sabah' AND tarih >= '$yedi_gun_once'")->fetch_assoc()['t'];
 $aksam_toplam = $conn->query("SELECT COUNT(*) as t FROM fircalama_takip WHERE user_id=$user_id AND vakit='aksam' AND tarih >= '$yedi_gun_once'")->fetch_assoc()['t'];
 $seri_sorgu = $conn->query("SELECT COUNT(DISTINCT tarih) as gun FROM fircalama_takip WHERE user_id=$user_id AND tarih >= '$yedi_gun_once'")->fetch_assoc()['gun'];
@@ -69,56 +81,57 @@ if($basari_yuzdesi >= 90) {
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
   <link rel="stylesheet" href="style.css" />
-  
   <style>
-    * { box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      /* Arka plan stilini style.css'den çekmesini istiyorsan burayı da silebilirsin, ama özel kalmasını istiyorsan kalsın */
-      background: linear-gradient(135deg, #f5f7fa, #c3e0ff, #e0c3fc);
-      background-size: 200% 200%;
-      animation: backgroundGradient 15s ease infinite;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-    @keyframes backgroundGradient {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-    .navbar {
-      background: linear-gradient(45deg, #ff6b6b, #a855f7, #06b6d4);
-      padding: 10px 30px;
-      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
-      border-bottom: 3px solid rgba(255, 255, 255, 0.2);
-      position: relative;
-    }
-    .navbar a { color: #fff; font-weight: 500; text-transform: uppercase; letter-spacing: 1px; padding: 10px 15px; text-decoration: none; }
-    .navbar-brand { font-weight: 700; font-size: 1.5rem; color: white; }
-    .nav-tabs .nav-link.active { background: rgba(255, 255, 255, 0.9); color: #4f46e5; border-radius: 8px 8px 0 0; }
-    .container { padding: 80px 20px; flex: 1; }
-    h1 { 
-      font-size: 2.8rem; color: #023e8a; font-weight: 700; text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
-      animation: fadeIn 1s ease-in-out; text-align: center; margin-top: -30px; margin-bottom: 40px;
-    }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    /* Sayfaya özel ek stiller */
+    .feature-section { background: rgba(255,255,255,0.95); padding: 45px 40px; border-radius: 20px; margin-bottom: 45px; box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08); border: 1px solid rgba(0,0,0,0.03); }
+    .feature-section h2 { color: #023e8a; font-size: 1.8rem; margin-bottom: 25px; font-weight: 600; }
+    .progress { height: 18px; border-radius: 10px; background-color: #f0f0f0; margin-bottom: 25px; overflow: hidden; }
+    .ai-dashboard-card { border-radius: 15px; padding: 25px; border: 1px dashed rgba(0,0,0,0.1); position: relative; overflow: hidden; }
+    .ai-badge { position: absolute; top: 15px; right: 15px; font-size: 0.8rem; background: white; padding: 5px 12px; border-radius: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); font-weight: 600; color: #666; }
     
     .nav-shortcuts { display: flex; justify-content: center; gap: 30px; margin-bottom: 50px; }
     .nav-shortcuts button { border: none; background-color: #06b6d4; color: white; padding: 12px 20px; border-radius: 10px; font-weight: 500; cursor: pointer; transition: all 0.3s ease; }
     .nav-shortcuts button:hover { background-color: #a855f7; }
 
-    .feature-section { background: rgba(255,255,255,0.95); padding: 45px 40px; border-radius: 20px; margin-bottom: 45px; box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08); border: 1px solid rgba(0,0,0,0.03); }
-    .feature-section h2 { color: #023e8a; font-size: 1.8rem; margin-bottom: 25px; font-weight: 600; }
+    /* YENİ EKLENEN POPUP STİLLERİ */
+    .reminder-overlay {
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(2, 62, 138, 0.6); /* Lacivert yarı saydam */
+        backdrop-filter: blur(8px); /* Arkadaki siteyi flu yapar */
+        z-index: 9999;
+        display: none; /* Başlangıçta gizli */
+        align-items: center; justify-content: center;
+    }
+    .reminder-box {
+        background: white;
+        padding: 40px;
+        border-radius: 25px;
+        text-align: center;
+        width: 90%;
+        max-width: 450px;
+        box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+        animation: popIn 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        position: relative;
+        border-top: 8px solid #06b6d4; /* Varsayılan renk */
+    }
+    @keyframes popIn {
+        0% { transform: scale(0.5); opacity: 0; }
+        100% { transform: scale(1); opacity: 1; }
+    }
+    .reminder-icon {
+        width: 90px; height: 90px;
+        background: #f0f9ff;
+        border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        margin: 0 auto 20px auto;
+        font-size: 3rem;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    }
     
-    .progress { height: 18px; border-radius: 10px; background-color: #f0f0f0; margin-bottom: 25px; overflow: hidden; }
-    
-    .ai-dashboard-card { border-radius: 15px; padding: 25px; border: 1px dashed rgba(0,0,0,0.1); position: relative; overflow: hidden; }
-    .ai-badge { position: absolute; top: 15px; right: 15px; font-size: 0.8rem; background: white; padding: 5px 12px; border-radius: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); font-weight: 600; color: #666; }
-    
-    /* FOOTER STİLLERİ SİLİNDİ - STYLE.CSS'DEN ÇEKİLECEK */
+    /* Navbar ve genel düzen style.css'den geliyor */
+    body { background: linear-gradient(135deg, #f5f7fa, #c3e0ff, #e0c3fc); min-height: 100vh; }
+    h1 { font-size: 2.8rem; color: #023e8a; font-weight: 700; text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); text-align: center; margin-top: 30px; margin-bottom: 40px; }
+    .container { padding-top: 40px; }
   </style>
 </head>
 <body>
@@ -136,6 +149,7 @@ if($basari_yuzdesi >= 90) {
 
   <div class="container">
     <h1>Fırçalama Takibi</h1>
+    
     <div class="nav-shortcuts">
       <button onclick="document.getElementById('gecmis').scrollIntoView({ behavior: 'smooth' })">Fırçalama Geçmişi</button>
       <button onclick="document.getElementById('oneri').scrollIntoView({ behavior: 'smooth' })">AI Destekli Öneri</button>
@@ -221,36 +235,33 @@ if($basari_yuzdesi >= 90) {
       <div class="row g-4 align-items-end">
           <div class="col-md-3">
               <label class="form-label fw-bold text-secondary small text-uppercase"><i class="fas fa-sun text-warning me-2"></i>Sabah Saati</label>
-              <input type="time" id="sabah" class="form-control form-control-lg border-0 bg-light" value="08:00">
+              <input type="time" id="sabah" class="form-control form-control-lg border-0 bg-light" value="<?= $kayitli_sabah ?>">
           </div>
           <div class="col-md-3">
               <label class="form-label fw-bold text-secondary small text-uppercase"><i class="fas fa-moon text-primary me-2"></i>Akşam Saati</label>
-              <input type="time" id="aksam" class="form-control form-control-lg border-0 bg-light" value="22:30">
+              <input type="time" id="aksam" class="form-control form-control-lg border-0 bg-light" value="<?= $kayitli_aksam ?>">
           </div>
           <div class="col-md-4">
-              <button class="btn btn-primary btn-lg w-100 shadow fw-bold" onclick="saatleriKaydet()"><i class="fas fa-bell me-2"></i>Saatleri Kaydet</button>
+              <button class="btn btn-primary btn-lg w-100 shadow fw-bold" onclick="saatleriKaydet()"><i class="fas fa-save me-2"></i>Ayarları Kaydet</button>
           </div>
       </div>
       <div id="status-msg" class="mt-4 d-none"><div class="alert alert-success border-0 shadow-sm py-3"><strong>Başarılı!</strong> Hatırlatıcı saatlerin güncellendi.</div></div>
     </div>
   </div>
 
-  <script>
-    function islemYap(vakit, tip) {
-        if (tip === 'sil' && !confirm("Bu kaydı silmek istediğinize emin misiniz?")) return;
-        const formData = new FormData();
-        formData.append('vakit', vakit); formData.append('islem', tip);
-        fetch('fircalama_kaydet.php', { method: 'POST', body: formData })
-        .then(response => response.text()).then(data => {
-            if(data.trim() === 'success' || data.trim() === 'deleted') location.reload(); else alert('Hata oluştu!');
-        });
-    }
-    function saatleriKaydet() {
-        const msg = document.getElementById('status-msg');
-        msg.classList.remove('d-none'); setTimeout(() => msg.classList.add('d-none'), 3000);
-        if ("Notification" in window) Notification.requestPermission();
-    }
-  </script>
+  <div id="reminder-popup" class="reminder-overlay">
+      <div class="reminder-box">
+          <div class="reminder-icon" id="popup-icon-container">
+              <i class="fas fa-clock" id="popup-icon"></i>
+          </div>
+          <h2 class="fw-bold mb-3" style="color: #023e8a;" id="popup-title">Fırçalama Vakti!</h2>
+          <p class="text-muted mb-4" id="popup-message" style="font-size: 1.1rem;">Sağlıklı gülüşler için 2 dakikanı ayırma vakti geldi.</p>
+          
+          <button class="btn btn-primary btn-lg w-100 rounded-pill shadow-sm" onclick="kapatPopup()">
+              <i class="fas fa-check me-2"></i> Tamam, Fırçalıyorum!
+          </button>
+      </div>
+  </div>
 
   <footer>
     <div class="footer-content">
@@ -277,5 +288,112 @@ if($basari_yuzdesi >= 90) {
       © 2025 Aslı AYDIN tarafından geliştirildi.
     </div>
   </footer>
+
+  <script>
+    // --- BİLDİRİM İZNİ İSTEME ---
+    document.addEventListener('DOMContentLoaded', function() {
+        if ("Notification" in window) {
+            if (Notification.permission !== "granted" && Notification.permission !== "denied") {
+                Notification.requestPermission();
+            }
+        }
+        setInterval(bildirimKontrol, 60000); // 60 saniyede bir kontrol
+    });
+
+    // --- POPUP FONKSİYONLARI (YENİ) ---
+    function gosterPopup(tip) {
+        const overlay = document.getElementById('reminder-popup');
+        const box = document.querySelector('.reminder-box');
+        const title = document.getElementById('popup-title');
+        const msg = document.getElementById('popup-message');
+        const icon = document.getElementById('popup-icon');
+        const iconContainer = document.getElementById('popup-icon-container');
+
+        if(tip === 'sabah') {
+            box.style.borderTopColor = "#ffc107"; // Sarı
+            icon.className = "fas fa-sun text-warning";
+            iconContainer.style.background = "#fff9db";
+            title.innerText = "Günaydın Aslı! ☀️";
+            msg.innerText = "Güne ferah bir başlangıç yapmak için dişlerini fırçalamayı unutma.";
+        } else {
+            box.style.borderTopColor = "#0d6efd"; // Mavi
+            icon.className = "fas fa-moon text-primary";
+            iconContainer.style.background = "#e7f1ff";
+            title.innerText = "İyi Geceler Aslı! 🌙";
+            msg.innerText = "Günü bitirmeden önce 2 dakikanı dişlerine ayırmayı unutma.";
+        }
+
+        overlay.style.display = 'flex';
+    }
+
+    function kapatPopup() {
+        document.getElementById('reminder-popup').style.display = 'none';
+    }
+
+    // --- FIRÇALAMA İŞLEMLERİ ---
+    function islemYap(vakit, tip) {
+        if (tip === 'sil' && !confirm("Bu kaydı silmek istediğinize emin misiniz?")) return;
+        const formData = new FormData();
+        formData.append('vakit', vakit); formData.append('islem', tip);
+        fetch('fircalama_kaydet.php', { method: 'POST', body: formData })
+        .then(response => response.text()).then(data => {
+            if(data.trim() === 'success' || data.trim() === 'deleted') location.reload(); else alert('Hata oluştu!');
+        });
+    }
+
+    // --- SAAT KAYDETME ---
+    function saatleriKaydet() {
+        const sabah = document.getElementById('sabah').value;
+        const aksam = document.getElementById('aksam').value;
+        
+        const formData = new FormData();
+        formData.append('sabah', sabah);
+        formData.append('aksam', aksam);
+
+        fetch('hatirlatma_kaydet.php', { method: 'POST', body: formData })
+        .then(response => response.text()).then(data => {
+            if(data.trim() === 'success') {
+                const msg = document.getElementById('status-msg');
+                msg.classList.remove('d-none'); 
+                setTimeout(() => msg.classList.add('d-none'), 3000);
+                if (Notification.permission !== "granted") Notification.requestPermission();
+            } else {
+                alert('Hata oluştu.');
+            }
+        });
+    }
+
+    // --- BİLDİRİM VE POPUP KONTROLÜ (GÜNCELLENDİ) ---
+    let sonBildirimZamani = ""; // Aynı dakika içinde tekrar tekrar açılmasın diye
+
+    function bildirimKontrol() {
+        const simdi = new Date();
+        const saat = String(simdi.getHours()).padStart(2, '0');
+        const dakika = String(simdi.getMinutes()).padStart(2, '0');
+        const suan = saat + ':' + dakika;
+
+        // Eğer bu dakikada zaten bildirim gösterdiysek tekrar gösterme
+        if (suan === sonBildirimZamani) return;
+
+        const sabahHedef = document.getElementById('sabah').value;
+        const aksamHedef = document.getElementById('aksam').value;
+
+        if (suan === sabahHedef) {
+            gosterPopup('sabah');
+            if (Notification.permission === "granted") {
+                new Notification("Fırçalama Vakti!", { body: "Günaydın! Dişlerini fırçalamayı unutma." });
+            }
+            sonBildirimZamani = suan;
+        }
+
+        if (suan === aksamHedef) {
+            gosterPopup('aksam');
+            if (Notification.permission === "granted") {
+                new Notification("Fırçalama Vakti!", { body: "İyi geceler! Uyumadan önce dişlerini fırçala." });
+            }
+            sonBildirimZamani = suan;
+        }
+    }
+  </script>
 </body>
 </html>
