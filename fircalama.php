@@ -133,6 +133,27 @@ if($basari_yuzdesi >= 90) {
     h1 { font-size: 2.8rem; color: #023e8a; font-weight: 700; text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); text-align: center; margin-top: -40px; margin-bottom: 40px; }
     .container { padding-top: 40px; }
   </style>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#06b6d4" />
+  <link rel="manifest" href="manifest.json" />
+  
+  <link rel="apple-touch-icon" href="img/icon-192.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function() {
+        navigator.serviceWorker.register('service-worker.js').then(function(registration) {
+          console.log('PWA Servis Çalışanı başarıyla kaydedildi: ', registration.scope);
+        }, function(err) {
+          console.log('PWA Servis Çalışanı hatası: ', err);
+        });
+      });
+    }
+  </script>
+  
 </head>
 <body>
   <nav class="navbar navbar-expand-lg">
