@@ -226,19 +226,19 @@ if($basari_yuzdesi >= 90) {
                   <div class="row g-3 mt-4">
                       <div class="col-6 col-md-4">
                           <div class="p-3 text-center rounded-4 shadow-sm border" style="background: rgba(255, 193, 7, 0.1); border-color: rgba(255, 193, 7, 0.2) !important;">
-                              <div class="small fw-bold text-uppercase text-muted opacity-75 mb-1">Güneş (Sabah)</div>
+                              <div class="small fw-bold text-uppercase text-muted opacity-75 mb-1">Sabah</div>
                               <div class="h4 fw-bold mb-0 text-dark"><i class="fas fa-sun text-warning me-2"></i><?= $sabah_toplam ?> / 7</div>
                           </div>
                       </div>
                       <div class="col-6 col-md-4">
                           <div class="p-3 text-center rounded-4 shadow-sm border" style="background: rgba(13, 110, 253, 0.1); border-color: rgba(13, 110, 253, 0.2) !important;">
-                              <div class="small fw-bold text-uppercase text-muted opacity-75 mb-1">Ay (Akşam)</div>
+                              <div class="small fw-bold text-uppercase text-muted opacity-75 mb-1">Akşam</div>
                               <div class="h4 fw-bold mb-0 text-dark"><i class="fas fa-moon text-primary me-2"></i><?= $aksam_toplam ?> / 7</div>
                           </div>
                       </div>
                       <div class="col-12 col-md-4">
                           <div class="p-3 text-center rounded-4 shadow-sm border" style="background: rgba(220, 53, 69, 0.1); border-color: rgba(220, 53, 69, 0.2) !important;">
-                              <div class="small fw-bold text-uppercase text-muted opacity-75 mb-1">Ateş (Seri)</div>
+                              <div class="small fw-bold text-uppercase text-muted opacity-75 mb-1">Seri</div>
                               <div class="h4 fw-bold mb-0 text-dark"><i class="fas fa-fire text-danger me-2"></i><?= $seri_sorgu ?> Gün</div>
                           </div>
                       </div>
