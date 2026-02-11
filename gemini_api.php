@@ -49,19 +49,26 @@ function analyzeToothWithGemini($tooth, $complaint, $painLevel) {
         return "Hata: API anahtarı .env dosyasında bulunamadı.";
     }
 
+    // ────────────────────────────────────────────────────────────
+    // GÜNCELLEME 1: PROMPT'A MHRS BÖLÜM SEÇİMİ EKLENDİ
+    // ────────────────────────────────────────────────────────────
     $prompt = "Sen profesyonel bir diş hekimisin. Aşağıdaki hasta bilgilerine göre analiz yap:
 
 Diş Numarası: $tooth
 Şikayet: $complaint  
 Ağrı Seviyesi: $painLevel
 
-Lütfen şunları yap:
-1. Olası nedenleri listele (2-3 madde)
-2. Evde yapılabilecek ilk yardım önerileri ver
-3. Hangi durumda acil diş hekimine gitmeli belirt
-4. Hangi tedavi gerekebileceğini söyle
+Lütfen şu başlıklar altında yanıt ver:
+1. Olası Nedenler (Kısa 2 madde)
+2. Evde Ne Yapılabilir? (Pratik öneriler)
+3. Tedavi Yöntemi (Dolgu, kanal vb.)
+4. MHRS RANDEVU REHBERİ: (Bu kısmı çok net yaz)
+   - Hastanın hastaneden randevu alırken hangi polikliniği seçmesi gerektiğini belirt.
+   - Seçenekler: 'Restoratif Diş Tedavisi' (Dolgu için), 'Endodonti' (Kanal tedavisi için), 'Ağız Diş ve Çene Cerrahisi' (Çekim/Gömülü diş), 'Periodontoloji' (Diş eti), 'Protetik Diş Tedavisi' (Kaplama/Protez).
+   - Eğer emin değilsen veya ilk muayene gerekliyse 'Genel Diş Polikliniği (Muayene)' öner.
+   - Bölüm adını mutlaka **kalın** yaz.
 
-Türkçe, anlaşılır ve empatik bir dil kullan. Maximum 250 kelime.";
+Türkçe, anlaşılır ve empatik bir dil kullan. Maximum 300 kelime.";
 
     $postData = [
         "contents" => [[
@@ -72,6 +79,8 @@ Türkçe, anlaşılır ve empatik bir dil kullan. Maximum 250 kelime.";
             "maxOutputTokens" => 1000
         ]
     ];
+    
+    
     $model = "gemini-2.5-flash-lite"; 
     $url = "https://generativelanguage.googleapis.com/v1/models/{$model}:generateContent?key=" . $apiKey;
 
@@ -144,11 +153,12 @@ Türkçe, anlaşılır ve empatik bir dil kullan. Maximum 250 kelime.";
     // Satır sonları
     $text = nl2br($text);
 
-    // Son olarak şık kutu
+    // ────────────────────────────────────────────────────────────
+    // ÇIKTI KUTUSU VE MHRS BUTONU TASARIMI
+    // ────────────────────────────────────────────────────────────
     $finalOutput = '
     <div style="font-family:system-ui,Arial,sans-serif; max-width:680px; margin:20px auto; background:#f0f9ff; padding:26px; border-radius:16px; border-left:6px solid #0ea5e9; box-shadow:0 6px 25px rgba(14,165,233,0.15); line-height:1.8;">
         <div style="display:flex; align-items:center; gap:12px; margin-bottom:18px; color:#1e293b;">
-            
             <strong style="font-size:2.3em; color:#1e40af;">Diş Hekimi Asistanı</strong>
         </div>
         <div style="color:#2d3748; font-size:1.05em;">
@@ -157,7 +167,18 @@ Türkçe, anlaşılır ve empatik bir dil kullan. Maximum 250 kelime.";
         <div style="margin-top:24px; padding-top:14px; border-top:1px dashed #94a3b8; font-size:0.9em; color:#64748b;">
             Bu değerlendirme yapay zeka tarafından yapılmıştır. Kesin tanı ve tedavi için diş hekiminize başvurunuz.
         </div>
-        <a href="https://www.mhrs.gov.tr" target="_blank" class="mhrs-btn btn-sm">MHRS\'den Randevu Al</a>
+        
+        <div style="margin-top:20px; background:#eff6ff; border: 2px dashed #3b82f6; border-radius:12px; padding:15px; text-align:center;">
+            <div style="color:#1e40af; font-weight:bold; margin-bottom:5px;">
+                <i class="fas fa-hospital-user me-2"></i>Randevu İpucu
+            </div>
+            <div style="font-size:0.9em; color:#475569; margin-bottom:10px;">
+                Yukarıda belirtilen poliklinik için randevu alabilirsiniz.
+            </div>
+            <a href="https://www.mhrs.gov.tr" target="_blank" style="display:inline-block; background:#e11d48; color:white; text-decoration:none; padding:10px 25px; border-radius:50px; font-weight:bold; transition:all 0.2s;">
+                MHRS İle Randevu Al
+            </a>
+        </div>
     </div>';
 
     return $finalOutput;
