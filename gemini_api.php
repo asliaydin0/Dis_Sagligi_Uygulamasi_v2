@@ -1,9 +1,52 @@
 <?php
+// ────────────────────────────────────────────────────────────
+// 1. .ENV DOSYASINI OKUMA FONKSİYONU
+// (Bu kısım sayesinde kütüphane kurmadan .env dosyasını okuruz)
+// ────────────────────────────────────────────────────────────
+function loadEnv($path) {
+    if (!file_exists($path)) {
+        return false;
+    }
+    $lines = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+    foreach ($lines as $line) {
+        // Yorum satırlarını (#) atla
+        if (strpos(trim($line), '#') === 0) continue;
+        
+        // Eşittir işaretine göre ayır
+        if (strpos($line, '=') !== false) {
+            list($name, $value) = explode('=', $line, 2);
+            $name = trim($name);
+            $value = trim($value);
+            // Tırnak işaretlerini temizle
+            $value = trim($value, '"\'');
+            
+            // Ortam değişkenlerine ekle
+            if (!array_key_exists($name, $_SERVER) && !array_key_exists($name, $_ENV)) {
+                putenv(sprintf('%s=%s', $name, $value));
+                $_ENV[$name] = $value;
+                $_SERVER[$name] = $value;
+            }
+        }
+    }
+}
+
+// .env dosyasını yükle (Dosyanın bu php dosyasıyla aynı klasörde olduğunu varsayar)
+loadEnv(__DIR__ . '/.env');
+
+// ────────────────────────────────────────────────────────────
+// 2. ANA FONKSİYON
+// ────────────────────────────────────────────────────────────
 function analyzeToothWithGemini($tooth, $complaint, $painLevel) {
-    $apiKey = "AIzaSyDAeFapLZs9fL_xWqcxv42QZ34--AoeQ1k";
     
-    if (empty($apiKey)) {
-        return "Hata: API anahtarı tanımlanmamış.";
+    // API Anahtarını kodun içine yazmıyoruz, .env'den çekiyoruz
+    $apiKey = $_ENV['GEMINI_API_KEY'] ?? getenv('GEMINI_API_KEY');
+    
+    // Olası boşlukları temizle (Hata riskini azaltır)
+    $apiKey = trim($apiKey);
+
+    // Anahtar kontrolü
+    if (empty($apiKey) || $apiKey === 'KEY_YOK') {
+        return "Hata: API anahtarı .env dosyasında bulunamadı.";
     }
 
     $prompt = "Sen profesyonel bir diş hekimisin. Aşağıdaki hasta bilgilerine göre analiz yap:
@@ -29,9 +72,7 @@ Türkçe, anlaşılır ve empatik bir dil kullan. Maximum 250 kelime.";
             "maxOutputTokens" => 1000
         ]
     ];
-
-    // En hızlı ve sorunsuz model (thinking kapalı)
-    $model = "gemini-2.5-flash-lite";
+    $model = "gemini-2.5-flash-lite"; 
     $url = "https://generativelanguage.googleapis.com/v1/models/{$model}:generateContent?key=" . $apiKey;
 
     $ch = curl_init($url);
@@ -73,53 +114,53 @@ Türkçe, anlaşılır ve empatik bir dil kullan. Maximum 250 kelime.";
         return "Yapay zeka yanıtı alınamadı. (Boş içerik)";
     }
 
-// ────────────────────────────────
-// GÜZELLEŞTİRME – WARNING YOK, TAMAMEN ÇALIŞIR
-// ────────────────────────────────
-$text = trim($text);
-$text = htmlspecialchars($text, ENT_QUOTES, 'UTF-8');
+    // ────────────────────────────────
+    // GÜZELLEŞTİRME 
+    // ────────────────────────────────
+    $text = trim($text);
+    $text = htmlspecialchars($text, ENT_QUOTES, 'UTF-8');
 
-// Kalın yazı (**text** veya __text__)
-$text = preg_replace('/\*\*(.*?)\*\*/', '<strong>$1</strong>', $text);
-$text = preg_replace('/__(.*?)__/', '<strong>$1</strong>', $text);
+    // Kalın yazı (**text** veya __text__)
+    $text = preg_replace('/\*\*(.*?)\*\*/', '<strong>$1</strong>', $text);
+    $text = preg_replace('/__(.*?)__/', '<strong>$1</strong>', $text);
 
-// Başlıkları güvenli şekilde işle (preg_replace_callback ile delimiter sorunu yok)
-$text = preg_replace_callback('/^(#{1,3})\s*(.+)$/m', function($m) {
-    $hashes = strlen($m[1]);
-    $title  = trim($m[2]);
-    
-    if ($hashes == 1) {
-        return '<h1 style="color:#1e40af; margin:24px 0 12px; font-size:1.6em;">Diş ' . $title . '</h1>';
-    } elseif ($hashes == 2) {
-        return '<h2 style="color:#1e40af; margin:22px 0 10px; font-size:1.4em;">Diş ' . $title . '</h2>';
-    } else { // ### 
-        return '<h3 style="color:#1e40af; margin:18px 0 8px; font-size:1.2em;">' . $title . '</h3>';
-    }
-}, $text);
-
-// Madde işaretlerini güzelleştir
-$text = preg_replace('/^(\s*)(?:\d+\.|\-|\•|\*)\s+/m', '$1• ', $text);
-
-// Satır sonları
-$text = nl2br($text);
-
-// Son olarak şık kutu
-$finalOutput = '
-<div style="font-family:system-ui,Arial,sans-serif; max-width:680px; margin:20px auto; background:#f0f9ff; padding:26px; border-radius:16px; border-left:6px solid #0ea5e9; box-shadow:0 6px 25px rgba(14,165,233,0.15); line-height:1.8;">
-    <div style="display:flex; align-items:center; gap:12px; margin-bottom:18px; color:#1e293b;">
+    // Başlıkları güvenli şekilde işle
+    $text = preg_replace_callback('/^(#{1,3})\s*(.+)$/m', function($m) {
+        $hashes = strlen($m[1]);
+        $title  = trim($m[2]);
         
-        <strong style="font-size:2.3em; color:#1e40af;">Diş Hekimi Asistanı</strong>
-    </div>
-    <div style="color:#2d3748; font-size:1.05em;">
-        ' . $text . '
-    </div>
-    <div style="margin-top:24px; padding-top:14px; border-top:1px dashed #94a3b8; font-size:0.9em; color:#64748b;">
-        Bu değerlendirme yapay zeka tarafından yapılmıştır. Kesin tanı ve tedavi için diş hekiminize başvurunuz.
-    </div>
-    <a href="https://www.mhrs.gov.tr" target="_blank" class="mhrs-btn btn-sm">MHRS\'den Randevu Al</a>
-</div>';
+        if ($hashes == 1) {
+            return '<h1 style="color:#1e40af; margin:24px 0 12px; font-size:1.6em;">Diş ' . $title . '</h1>';
+        } elseif ($hashes == 2) {
+            return '<h2 style="color:#1e40af; margin:22px 0 10px; font-size:1.4em;">Diş ' . $title . '</h2>';
+        } else { // ### 
+            return '<h3 style="color:#1e40af; margin:18px 0 8px; font-size:1.2em;">' . $title . '</h3>';
+        }
+    }, $text);
 
-return $finalOutput;
+    // Madde işaretlerini güzelleştir
+    $text = preg_replace('/^(\s*)(?:\d+\.|\-|\•|\*)\s+/m', '$1• ', $text);
+
+    // Satır sonları
+    $text = nl2br($text);
+
+    // Son olarak şık kutu
+    $finalOutput = '
+    <div style="font-family:system-ui,Arial,sans-serif; max-width:680px; margin:20px auto; background:#f0f9ff; padding:26px; border-radius:16px; border-left:6px solid #0ea5e9; box-shadow:0 6px 25px rgba(14,165,233,0.15); line-height:1.8;">
+        <div style="display:flex; align-items:center; gap:12px; margin-bottom:18px; color:#1e293b;">
+            
+            <strong style="font-size:2.3em; color:#1e40af;">Diş Hekimi Asistanı</strong>
+        </div>
+        <div style="color:#2d3748; font-size:1.05em;">
+            ' . $text . '
+        </div>
+        <div style="margin-top:24px; padding-top:14px; border-top:1px dashed #94a3b8; font-size:0.9em; color:#64748b;">
+            Bu değerlendirme yapay zeka tarafından yapılmıştır. Kesin tanı ve tedavi için diş hekiminize başvurunuz.
+        </div>
+        <a href="https://www.mhrs.gov.tr" target="_blank" class="mhrs-btn btn-sm">MHRS\'den Randevu Al</a>
+    </div>';
+
+    return $finalOutput;
 }
 
 // TEST MODU
